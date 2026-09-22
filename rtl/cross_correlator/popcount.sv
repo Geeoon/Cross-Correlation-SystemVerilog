@@ -12,6 +12,9 @@
  */
 module popcount #(
     parameter int DEPTH
+    // parameter int IN_LENGTH,
+    // parameter int LUT_SIZE=6,
+    // parameter int ADDER_SIZE=3
 )(
     input logic clk,
     input logic start,
@@ -20,7 +23,23 @@ module popcount #(
     output logic [DEPTH:0] out_arr,
     output logic valid
 );
-
+    // Constant function to compute ceil(log_base(value))
+    // function automatic integer clogb_n;
+    //     input integer base;
+    //     input integer value;
+    //     integer temp;
+    //     begin
+    //         clogb_n = 0;
+    //         temp = 1;
+    //         while (temp < value) begin
+    //             temp = temp * base;
+    //             clogb_n = clogb_n + 1;
+    //         end
+    //     end
+    // endfunction
+    
+    // localparam int DEPTH = clogb_n(ADDER_SIZE, IN_LENGTH / LUT_SIZE) + 1;
+        
     generate
         if (DEPTH == 1)
             begin : DEPTH_eq_1
