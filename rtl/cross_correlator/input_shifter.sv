@@ -2,6 +2,14 @@
  * @file input_shifter.sv
  * @author Geeoon Chung
  * @brief shifts inputs into a packed array
+ * @param KERNEL_SIZE       the size of the kernel, in terms of 2^KERNEL_SIZE
+ * @param[in] clk           the clock driving the sequential logic
+ * @param[in] rst           the signal to reset the kernel fill
+ * @param[in] in_signal     the in_signal the new sample from the actual signal
+ * @param[in] in_kernel     the next sample from the kernel
+ * @param[out] filled       whether or not the kernel has finished loading
+ * @param[out] signal       the current signal
+ * @param[out] kernel       the loaded kernel
  */
 module input_shifter #(
     parameter KERNEL_SIZE=9
