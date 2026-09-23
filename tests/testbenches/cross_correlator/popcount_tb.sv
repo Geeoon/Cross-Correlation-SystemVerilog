@@ -64,18 +64,18 @@ module popcount_tb #(
             @(negedge valid);
         end
 
-        // $display("\n -- Two Hot -- ");
-        // for (int i = 0; i < 2**DEPTH; i++) begin
-        //     for (int j = 0; j < 2**DEPTH; j++) begin
-        //         if (i == j) continue;
-        //         start = 1;
-        //         in_arr = (1 << i) | (1 << j);
-        //         @(posedge valid);
-        //         start = 0;
-        //         assert(out_arr == 2);
-        //         @(negedge valid);
-        //     end
-        // end
+        $display("\n -- Two Hot -- ");
+        for (int i = 0; i < 2**DEPTH; i++) begin
+            for (int j = 0; j < 2**DEPTH; j++) begin
+                if (i == j) continue;
+                start = 1;
+                in_arr = (1 << i) | (1 << j);
+                @(posedge valid);
+                start = 0;
+                assert(out_arr == 2);
+                @(negedge valid);
+            end
+        end
 
         $display("\n -- Pipeline -- ");
         for (int i = 0; i < DEPTH; i++) begin
