@@ -4,9 +4,9 @@
  * @brief counts the 1 bits in a packed array (popcount) using a tree
  * @param IN_LENGTH     the number of 1-bit samples on the input
  * @param LUT_SIZE      the size of the LUTs on the target system. you can set
- *          this to 2 for a binary tree structure.
+ *                          this to 2 for a binary tree structure.
  * @param ADDER_SIZE    the size of the adders on the target system. you can
- *          set this to 2 for a binary tree structure.
+ *                          set this to 2 for a binary tree structure.
  * @param[in] clk       the clock driving the sequential logic
  * @param[in] start     whether the inputs are valid or not
  * @param[in] in_arr    the input array to count
