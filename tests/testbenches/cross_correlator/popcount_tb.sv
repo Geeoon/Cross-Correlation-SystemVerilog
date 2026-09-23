@@ -17,7 +17,7 @@ module popcount_tb #(
     logic valid;
 
     popcount #(
-        .DEPTH(DEPTH)
+        .IN_LENGTH(2**DEPTH)
     ) dut (
         .clk,
         .start,
