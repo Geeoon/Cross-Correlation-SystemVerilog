@@ -2,8 +2,11 @@
  * @file popcount.sv
  * @author Geeoon Chung
  * @brief counts the 1 bits in a packed array (popcount) using a tree
- * @todo optimize for LUT size
- * @param DEPTH         the number of layers of the adder, log_2(# of samples)
+ * @param IN_LENGTH     the number of 1-bit samples on the input
+ * @param LUT_SIZE      the size of the LUTs on the target system. you can set
+ *          this to 2 for a binary tree structure.
+ * @param ADDER_SIZE    the size of the adders on the target system. you can
+ *          set this to 2 for a binary tree structure.
  * @param[in] clk       the clock driving the sequential logic
  * @param[in] start     whether the inputs are valid or not
  * @param[in] in_arr    the input array to count
@@ -12,19 +15,19 @@
  */
 
 // Constant function to compute ceil(log_base(value))
-function automatic integer clogb_n;
-    input integer base;
-    input integer value;
-    integer temp;
+function automatic int clogb_n;
+    input int base;
+    input int value;
+    int temp;
     begin
         clogb_n = 0;
         temp = 1;
         while (temp < value) begin
             temp = temp * base;
             clogb_n = clogb_n + 1;
-        end
+        end  // while
     end
-endfunction
+endfunction  // clogb_n
 
 module popcount #(
     parameter int IN_LENGTH,
@@ -43,7 +46,7 @@ module popcount #(
     output logic [OUTPUT_BITS-1:0] out_arr,
     output logic valid
 );
-    logic [TOTAL_SIZE-1:0] padded;
+    logic [TOTAL_SIZE-1:0] padded;  // compiler should optimize the dead parts of the tree
     assign padded = {TOTAL_SIZE}'(in_arr);  // pads to expected lengths
     if (DEPTH == 0)  // base case
         begin : DEPTH_eq_1
@@ -96,4 +99,4 @@ module popcount #(
                 out_arr <= sum;
             end  // always_ff
         end  // DEPTH_gt_1
-endmodule
+endmodule  // popcount
