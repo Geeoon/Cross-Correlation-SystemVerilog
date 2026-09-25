@@ -26,7 +26,7 @@ module input_shifter #(
 
     always_ff @(posedge clk) begin
         // shift, always do this
-        signal <= { signal[KERNEL_LENGTH-2:0], signal_in };
+        signal <= { signal_in, signal[KERNEL_LENGTH-1:1] };
         if (rst) begin
             fill <= '0;
         end else if (!filled) begin

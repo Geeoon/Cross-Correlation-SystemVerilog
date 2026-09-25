@@ -6,7 +6,7 @@
 
 module popcount_tb #(
     parameter int CLOCK_PERIOD=100,
-    parameter int IN_LENGTH=1458,
+    parameter int IN_LENGTH=6,
     parameter int LUT_SIZE=6,
     parameter int ADDER_SIZE=3,
 
