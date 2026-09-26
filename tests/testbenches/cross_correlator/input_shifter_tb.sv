@@ -44,6 +44,7 @@ module input_shifter_tb #(
         
         for (int i = 0; i < KERNEL_LENGTH + 5; i++) begin
             signal_in = ~signal_in;
+            $display("fill: %b", dut.fill);
             $display("signal: %b", signal);
             $display("filled: %b\n", filled);
             @(posedge clk); #5;

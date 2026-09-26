@@ -51,7 +51,7 @@ module popcount #(
     end
 
     logic [TOTAL_SIZE-1:0] padded;  // compiler should optimize the dead parts of the tree
-    assign padded = {TOTAL_SIZE}'(in_arr);  // pads to expected lengths
+    assign padded = (TOTAL_SIZE)'(in_arr);  // pads to expected lengths
     if (DEPTH == 0)  // base case
         begin : DEPTH_eq_0
             // LUT compressor logic
@@ -59,7 +59,7 @@ module popcount #(
             always_comb begin
                 compressor = '0;
                 for (int i = 0; i < LUT_SIZE; i++) begin
-                    compressor = compressor + {OUTPUT_BITS}'(padded[i]);
+                    compressor = compressor + (OUTPUT_BITS)'(padded[i]);
                 end  // for
             end  // always_comb
             // pipeline DFF
@@ -93,7 +93,7 @@ module popcount #(
             always_comb begin
                 sum = 0;
                 for (int i = 0; i < ADDER_SIZE; i++) begin
-                    sum = sum + {OUTPUT_BITS}'(outs[i]);
+                    sum = sum + (OUTPUT_BITS)'(outs[i]);
                 end  // for
             end  // always_comb
             

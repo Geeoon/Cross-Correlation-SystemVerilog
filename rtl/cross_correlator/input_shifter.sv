@@ -25,29 +25,22 @@ module input_shifter #(
     output logic filled,
     output logic [KERNEL_LENGTH-1:0] signal
 );
+    (* adder_threshold = 4, dont_touch = "true" *) 
+    logic [KERNEL_SIZE:0] fill;
+
     always_ff @(posedge clk) begin
-        if (rst) begin
-            // time and resource saving hack
-            signal <= { 1'b1, {KERNEL_LENGTH-1}'(0) };
-            filled <= 0;
+        if (CONVOLVE) begin
+            signal <= { signal[KERNEL_LENGTH-2:0], signal_in };
         end else begin
-            if (CONVOLVE) begin
-                signal <= { signal[KERNEL_LENGTH-2:0], signal_in };
-            end else begin
-                signal <= { signal_in, signal[KERNEL_LENGTH-1:1] };
-            end
+            signal <= { signal_in, signal[KERNEL_LENGTH-1:1] };
         end
 
-        // this hack helps remove a slow path.  originally, there was a counter
-        // to determine when the signal had been fully filled.  This caused a
-        // adder to by synthesized, which slowed down our entire design
-        // with this hack, on reset we set the signal to '0, except for the first
-        // sample, setting it to 1. when the 1 bit reaches the final sample,
-        // set set a flip flop to 1.  the output of that flip flop determines
-        // whether or not our signal has been filled. by doing this, we prevent
-        // the synthesis of an adder, improving our timing and saving resources
-        if (signal[0]) begin
-            filled <= 1;
+        if (rst) begin
+            filled <= 0;
+            fill <= (KERNEL_SIZE+1)'(KERNEL_LENGTH - 1);
+        end else begin
+            fill <= fill - 1;
+            filled <= (fill == 0) | filled;
         end
     end  // always_ff
 endmodule  // input_shifter
