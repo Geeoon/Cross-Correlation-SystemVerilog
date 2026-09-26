@@ -11,7 +11,7 @@
 module lfsr_timer #(
     parameter int COUNT,
 
-    localparam int N=$clog2(COUNT)
+    localparam int N=$clog2(COUNT+1)
 )(
     input logic clk,
     input logic rst,
@@ -61,7 +61,7 @@ module lfsr_timer #(
 
     function automatic logic [N-1:0] calculate_end();
         logic [N-1:0] temp = '1;
-        int steps = (2**N) - (COUNT-1);
+        int steps = (2**N) - (COUNT);
         for (int i = 0; i < steps; i++) begin
             temp = get_next_state(temp);
         end  // for

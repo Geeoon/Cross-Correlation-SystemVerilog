@@ -42,12 +42,12 @@ module lfsr_timer_tb #(
         
         repeat(COUNT) begin
             assert(~done);
-            @(posedge clk);
+            @(posedge clk); #5;
         end  // repeat
 
         repeat(10) begin
             assert(done);
-            @(posedge clk);
+            @(posedge clk); #5;
         end  // repeat
 
         $display(" -- FINISHED TESTS -- ");
