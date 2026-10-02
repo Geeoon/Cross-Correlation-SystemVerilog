@@ -1,7 +1,7 @@
 /**
  * @file input_shifter_tb.sv
  * @author Geeoon Chung
- * @brief testbench for input_shifter module
+ * @brief testbench for the input_shifter module
  */
 
 module input_shifter_tb #(
