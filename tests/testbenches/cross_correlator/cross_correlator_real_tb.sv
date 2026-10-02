@@ -85,13 +85,11 @@ module cross_correlator_real_tb #(
         rst = 0;
         while (!valid) begin
             signal_in = loaded_trace[k][0];
-            $display("%d, %d", k, out);
             k++;
             #5; @(posedge clk); #5;
         end
         for (int j = 0; j < 30; j++) begin
             signal_in = loaded_trace[k+j][0];
-            $display("%d, %d", loaded_correlation[j][OUT_SIZE-1:0], out);
             assert(out == loaded_correlation[j][OUT_SIZE-1:0]);
             #5; @(posedge clk); #5;
         end
