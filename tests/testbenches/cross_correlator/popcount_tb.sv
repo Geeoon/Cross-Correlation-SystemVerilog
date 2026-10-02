@@ -105,4 +105,4 @@ module popcount_tb #(
         $display("\n -- FINISHED TESTS -- ");
         $finish;
     end
-endmodule  // input_shifter_tb
+endmodule  // popcount_tb
