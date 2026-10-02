@@ -14,9 +14,7 @@
  */
 module input_shifter #(
     parameter int KERNEL_LENGTH,
-    parameter bit CONVOLVE=1'b0,
-    
-    localparam int KERNEL_SIZE=$clog2(KERNEL_LENGTH)
+    parameter bit CONVOLVE=1'b0
 )(
     input logic clk,
     input logic rst,
@@ -25,22 +23,22 @@ module input_shifter #(
     output logic filled,
     output logic [KERNEL_LENGTH-1:0] signal
 );
-    (* adder_threshold = 4, dont_touch = "true" *) 
-    logic [KERNEL_SIZE:0] fill;
+    // SUBMODULES
+    // lfsr timer
+    lfsr_timer #(
+        .COUNT(KERNEL_LENGTH)
+    ) timer_m (
+        .clk,
+        .rst,
+
+        .done(filled)
+    );
 
     always_ff @(posedge clk) begin
         if (CONVOLVE) begin
             signal <= { signal[KERNEL_LENGTH-2:0], signal_in };
         end else begin
             signal <= { signal_in, signal[KERNEL_LENGTH-1:1] };
-        end
-
-        if (rst) begin
-            filled <= 0;
-            fill <= (KERNEL_SIZE+1)'(KERNEL_LENGTH - 1);
-        end else begin
-            fill <= fill - 1;
-            filled <= (fill == 0) | filled;
         end
     end  // always_ff
 endmodule  // input_shifter
