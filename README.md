@@ -8,6 +8,6 @@ The output will have a latency of `1 + ceil(log(<adder size>, N / <LUT size>)) c
 Throughput will be 1 correlation per cycle.
 
 ## AMD Xilinx Spartan 7, Arty S7-25 (xc7s25-csga324-1)
-A maximum clock rate of 464 MHz was achieved.  The design uses 25 LUTs and 18 FFs.  No RAM, URAM, or DSPs were used.
-
+For a 512 sample kernel, a maximum clock rate of 464 MHz was achieved.  The design used 25 LUTs and 18 FFs.  No RAM, URAM, or DSPs were used.
+For a 1458 sample kernel, a maximum clock rate of 464 MHz was achieved.  The design used 55 LUTs and 19 FFs.  No RAM, URAM, or DSPs were used.
 Unfortunately I don't want to spend over a hundred bucks on a dev board, so I have not tested this on real hardware yet.
