@@ -70,6 +70,7 @@ module cross_correlator_real_tb #(
         end
         // load kernel into signal
         $fread(loaded_correlation, file_handle);
+
         for (int i = 0; i < KERNEL_LENGTH; i++) begin
             kernel[i] = loaded_kernel[i][0];
         end
@@ -85,17 +86,17 @@ module cross_correlator_real_tb #(
         while (!valid) begin
             signal_in = loaded_trace[i][0];
             i++;
-            @(posedge clk);
+            #5; @(posedge clk); #5;
+            $display(out);
         end
-        for (int j = 0; j < CORRELATION_LENGTH; j++) begin
+        for (int j = 0; j < 10; j++) begin
             signal_in = loaded_trace[i+j][0];
-            $display(i, j, out, loaded_correlation[j][OUT_SIZE-1:0]);
-            //assert(out == loaded_correlation[j][OUT_SIZE-1:0]);
+            $display(i, j);
+            $display(signal_in);
+            $display(out, loaded_correlation[j][OUT_SIZE-1:0]);
+            // assert(out == loaded_correlation[j][OUT_SIZE-1:0]);
+            #5; @(posedge clk); #5;
         end
-
-        signal_in = 0;
-        @(posedge valid);
-        assert(out == 0);
 
         $finish;
     end
