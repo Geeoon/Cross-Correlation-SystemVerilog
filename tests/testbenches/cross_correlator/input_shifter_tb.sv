@@ -5,11 +5,11 @@
  */
 
 module input_shifter_tb #(
-    parameter int KERNEL_LENGTH=4,
+    parameter int KERNEL_LENGTH=64,
     parameter int CLOCK_PERIOD=100
 ) ();
     // inputs
-    logic clk, rst, in_signal;
+    logic clk, rst, signal_in;
     
     // outputs
     logic filled;
@@ -18,7 +18,7 @@ module input_shifter_tb #(
     input_shifter #(
         .KERNEL_LENGTH(KERNEL_LENGTH)
     ) dut (
-        .clk, .rst, .in_signal,  // inputs
+        .clk, .rst, .signal_in,  // inputs
         .filled, .signal  // outputs
     );
 
@@ -37,13 +37,13 @@ module input_shifter_tb #(
         $display(" -- Starting input_shifter test -- ");
         // reset
         rst = 1;
-        in_signal = 1;
+        signal_in = 0;
         #5;
         @(posedge clk); #5;
         rst = 0;
         
-        for (int i = 0; i < 2 * KERNEL_LENGTH; i++) begin
-            in_signal = ~in_signal;
+        for (int i = 0; i < KERNEL_LENGTH + 5; i++) begin
+            signal_in = ~signal_in;
             $display("fill: %b", dut.fill);
             $display("signal: %b", signal);
             $display("filled: %b\n", filled);

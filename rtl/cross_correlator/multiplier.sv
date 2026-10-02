@@ -2,7 +2,7 @@
  * @file multiplier.sv
  * @author Geeoon Chung
  * @brief element-wise multiplication of two signals with samples of 1-bit in
- * depth
+ *          depth
  * @param SIGNAL_LENGTH     the length of the signal in terms of number of samples
  * @param[in] signal_1      the first operand
  * @param[in] signal_2      the second operand
