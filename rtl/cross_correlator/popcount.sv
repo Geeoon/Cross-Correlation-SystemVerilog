@@ -28,11 +28,11 @@ endfunction
 
 module popcount #(
     parameter int IN_LENGTH,
-    parameter int LUT_SIZE=4,
-    parameter int ADDER_SIZE=2,
+    parameter int LUT_SIZE=6,
+    parameter int ADDER_SIZE=3,
 
     localparam int DEPTH=clogb_n(ADDER_SIZE, IN_LENGTH / LUT_SIZE),
-    localparam int TOTAL_SIZE=LUT_SIZE * (ADDER_SIZE**(DEPTH-1)),
+    localparam int TOTAL_SIZE=LUT_SIZE * (ADDER_SIZE**DEPTH),
     localparam int OUTPUT_BITS=$clog2(IN_LENGTH+1),
     localparam int SUBSECTION_SIZE=TOTAL_SIZE/ADDER_SIZE
 )(
@@ -45,14 +45,14 @@ module popcount #(
 );
     logic [TOTAL_SIZE-1:0] padded;
     assign padded = {TOTAL_SIZE}'(in_arr);  // pads to expected lengths
-    if (DEPTH == 1)  // base case
+    if (DEPTH == 0)  // base case
         begin : DEPTH_eq_1
             // LUT compressor logic
             logic [OUTPUT_BITS-1:0] compressor;
             always_comb begin
                 compressor = '0;
                 for (int i = 0; i < LUT_SIZE; i++) begin
-                    compressor = compressor + {OUTPUT_BITS}'(in_arr[i]);
+                    compressor = compressor + {OUTPUT_BITS}'(padded[i]);
                 end  // for
             end  // always_comb
             // pipeline DFF
@@ -75,7 +75,7 @@ module popcount #(
                 ) popcount_section (
                     .clk,
                     .start,
-                    .in_arr(in_arr[((i+1)*SUBSECTION_SIZE)-1:i*SUBSECTION_SIZE]),
+                    .in_arr(padded[((i+1)*SUBSECTION_SIZE)-1:i*SUBSECTION_SIZE]),
                     .out_arr(outs[i]),
                     .valid(valids[i])
                 );
