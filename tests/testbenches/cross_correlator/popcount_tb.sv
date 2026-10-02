@@ -59,7 +59,7 @@ module popcount_tb #(
         start = 1;
         in_arr = '1;
         @(posedge valid);
-        assert(out_arr == {OUTPUT_BITS}'(IN_LENGTH));
+        assert(out_arr == (OUTPUT_BITS)'(IN_LENGTH));
         start = 0;
         @(negedge valid);
 
@@ -97,7 +97,7 @@ module popcount_tb #(
         
         for (int i = 0; i < DEPTH; i++) begin
             #5; assert(valid == 1);
-            assert(out_arr == {OUTPUT_BITS}'(i));
+            assert(out_arr == (OUTPUT_BITS)'(i));
             @(posedge clk);
         end
         #1; assert(valid == 0);

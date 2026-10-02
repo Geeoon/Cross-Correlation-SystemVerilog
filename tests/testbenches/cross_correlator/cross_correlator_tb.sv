@@ -87,7 +87,7 @@ module cross_correlator_tb #(
         signal_in = 1;
         kernel = '1;
         @(posedge valid);
-        assert(out == {OUT_SIZE}'(KERNEL_LENGTH));
+        assert(out == (OUT_SIZE)'(KERNEL_LENGTH));
 
         $display(" -- Alternating 0 and 1, in phase -- ");
         // reset
@@ -104,7 +104,7 @@ module cross_correlator_tb #(
             signal_in = ~signal_in;
             @(posedge clk);
         end  // while
-        assert(out == {OUT_SIZE}'(KERNEL_LENGTH / 2));
+        assert(out == (OUT_SIZE)'(KERNEL_LENGTH / 2));
 
         $display(" -- Alternating 1 and 0, in phase -- "); 
         // reset
@@ -121,7 +121,7 @@ module cross_correlator_tb #(
             signal_in = ~signal_in;
             @(posedge clk);
         end  // while
-        assert(out == {OUT_SIZE}'(KERNEL_LENGTH / 2));
+        assert(out == (OUT_SIZE)'(KERNEL_LENGTH / 2));
 
         $display(" -- Alternating 0 and 1, out of phase -- ");
         // reset
@@ -172,7 +172,7 @@ module cross_correlator_tb #(
         while (out == 0) @(posedge clk);
         for (int i = 1; i <= KERNEL_LENGTH; i++) begin
             // $display("%d, %d, %b", out, i, valid);
-            assert(out == {OUT_SIZE}'(i));
+            assert(out == (OUT_SIZE)'(i));
             @(posedge clk);
         end  // while
 
