@@ -5,19 +5,26 @@
  */
 
 module popcount_tb #(
-    parameter int DEPTH=9,
-    parameter int CLOCK_PERIOD=100
+    parameter int CLOCK_PERIOD=100,
+    parameter int IN_LENGTH=1458,
+    parameter int LUT_SIZE=6,
+    parameter int ADDER_SIZE=3,
+
+    localparam int DEPTH=clogb_n(ADDER_SIZE, IN_LENGTH / LUT_SIZE)+1,
+    localparam int OUTPUT_BITS=$clog2(IN_LENGTH+1)
 ) ();
     // inputs
     logic clk, start;
-    logic [(2**DEPTH)-1:0] in_arr;
+    logic [IN_LENGTH-1:0] in_arr;
 
     // outputs
-    logic [DEPTH:0] out_arr;
+    logic [OUTPUT_BITS-1:0] out_arr;
     logic valid;
 
     popcount #(
-        .IN_LENGTH(2**DEPTH)
+        .IN_LENGTH(IN_LENGTH),
+        .LUT_SIZE(LUT_SIZE),
+        .ADDER_SIZE(ADDER_SIZE)
     ) dut (
         .clk,
         .start,
@@ -43,19 +50,21 @@ module popcount_tb #(
         $display(" -- All 0s -- ");
         start = 1;
         in_arr = 0;
-
-        // for (int i = 0; i < 100; i++) begin
-        //     @(posedge clk);
-        // end
-        // $finish;
-        
         @(posedge valid);
         assert(out_arr == '0);
         start = 0;
         @(negedge valid);
 
+        $display("\n -- All 1s -- ");
+        start = 1;
+        in_arr = '1;
+        @(posedge valid);
+        assert(out_arr == {OUTPUT_BITS}'(IN_LENGTH));
+        start = 0;
+        @(negedge valid);
+
         $display("\n -- One Hot -- ");
-        for (int i = 0; i < 2**DEPTH; i++) begin
+        for (int i = 0; i < IN_LENGTH-1; i++) begin
             start = 1;
             in_arr = 1 << i;
             @(posedge valid);
@@ -65,8 +74,8 @@ module popcount_tb #(
         end
 
         $display("\n -- Two Hot -- ");
-        for (int i = 0; i < 2**DEPTH; i++) begin
-            for (int j = 0; j < 2**DEPTH; j++) begin
+        for (int i = 0; i < IN_LENGTH-1; i++) begin
+            for (int j = 0; j < IN_LENGTH-1; j++) begin
                 if (i == j) continue;
                 start = 1;
                 in_arr = (1 << i) | (1 << j);
@@ -88,7 +97,7 @@ module popcount_tb #(
         
         for (int i = 0; i < DEPTH; i++) begin
             #5; assert(valid == 1);
-            assert(out_arr == {DEPTH+1}'(i));
+            assert(out_arr == {OUTPUT_BITS}'(i));
             @(posedge clk);
         end
         #1; assert(valid == 0);
