@@ -92,7 +92,7 @@ module cross_correlator_tb #(
         $display(" -- Alternating 0 and 1, in phase -- ");
         // reset
         rst = 1;
-        signal_in = 1;
+        signal_in = 0;
         // set the kernel to be alternating 0 and 1
         for (int i = 0; i < KERNEL_LENGTH; i++) begin
             kernel[i] = 1'(i % 2);
@@ -109,7 +109,7 @@ module cross_correlator_tb #(
         $display(" -- Alternating 1 and 0, in phase -- "); 
         // reset
         rst = 1;
-        signal_in = 0;
+        signal_in = 1;
         // set the kernel to be alternating 0 and 1
         for (int i = 0; i < KERNEL_LENGTH; i++) begin
             kernel[i] = 1'((i+1) % 2);
@@ -126,7 +126,7 @@ module cross_correlator_tb #(
         $display(" -- Alternating 0 and 1, out of phase -- ");
         // reset
         rst = 1;
-        signal_in = 0;
+        signal_in = 1;
         // set the kernel to be alternating 0 and 1
         for (int i = 0; i < KERNEL_LENGTH; i++) begin
             kernel[i] = 1'(i % 2);
@@ -143,7 +143,7 @@ module cross_correlator_tb #(
         $display(" -- Alternating 1 and 0, out of phase -- "); 
         // reset
         rst = 1;
-        signal_in = 1;
+        signal_in = 0;
         // set the kernel to be alternating 0 and 1
         for (int i = 0; i < KERNEL_LENGTH; i++) begin
             kernel[i] = 1'((i+1) % 2);

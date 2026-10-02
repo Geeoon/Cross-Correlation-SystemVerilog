@@ -34,7 +34,7 @@ module popcount #(
     parameter int LUT_SIZE=6,
     parameter int ADDER_SIZE=3,
 
-    localparam int DEPTH=clogb_n(ADDER_SIZE, IN_LENGTH / LUT_SIZE),
+    localparam int DEPTH=clogb_n(ADDER_SIZE, IN_LENGTH / LUT_SIZE),  // TODO: this is doing integer division, so it messes up sometimes
     localparam int TOTAL_SIZE=LUT_SIZE * (ADDER_SIZE**DEPTH),
     localparam int OUTPUT_BITS=$clog2(IN_LENGTH+1),
     localparam int SUBSECTION_SIZE=TOTAL_SIZE/ADDER_SIZE
@@ -46,10 +46,14 @@ module popcount #(
     output logic [OUTPUT_BITS-1:0] out_arr,
     output logic valid
 );
+    if (IN_LENGTH < LUT_SIZE) begin
+        $error("Invalid popcount input length.  Input length must be greater than or equal to LUT size.");
+    end
+
     logic [TOTAL_SIZE-1:0] padded;  // compiler should optimize the dead parts of the tree
     assign padded = {TOTAL_SIZE}'(in_arr);  // pads to expected lengths
     if (DEPTH == 0)  // base case
-        begin : DEPTH_eq_1
+        begin : DEPTH_eq_0
             // LUT compressor logic
             logic [OUTPUT_BITS-1:0] compressor;
             always_comb begin
@@ -63,9 +67,9 @@ module popcount #(
                 valid <= start;
                 out_arr <= compressor;
             end  // always_ff
-        end  // DEPTH_eq_1
+        end  // DEPTH_eq_0
     else
-        begin : DEPTH_gt_1  // recursive case
+        begin : DEPTH_gt_0  // recursive case
             logic [($clog2(SUBSECTION_SIZE+1))-1:0] outs [0:ADDER_SIZE-1];
             logic [ADDER_SIZE-1:0] valids;
 
@@ -98,5 +102,5 @@ module popcount #(
                 valid <= &valids;
                 out_arr <= sum;
             end  // always_ff
-        end  // DEPTH_gt_1
+        end  // DEPTH_gt_0
 endmodule  // popcount

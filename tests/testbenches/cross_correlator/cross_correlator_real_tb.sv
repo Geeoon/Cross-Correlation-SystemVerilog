@@ -5,7 +5,7 @@
  */
 
 module cross_correlator_real_tb #(
-    parameter int KERNEL_LENGTH=1458,
+    parameter int KERNEL_LENGTH=512,
     parameter int CLOCK_PERIOD=100,
     parameter int TRACE_LENGTH=4000,
 
@@ -44,7 +44,7 @@ module cross_correlator_real_tb #(
     logic [7:0] loaded_trace [0:TRACE_LENGTH-1];
     logic [31:0] loaded_correlation [0:CORRELATION_LENGTH-1];
 
-    int i = 1;
+    int k = 0;
     initial begin
         // dump waveforms
         $dumpfile("waveforms/cross_correlator_real_tb.vcd");
@@ -80,21 +80,19 @@ module cross_correlator_real_tb #(
         // reset
         rst = 1;
         signal_in = loaded_trace[0][0];
-        @(posedge clk);
+        #5; @(posedge clk); #5;
 
         rst = 0;
         while (!valid) begin
-            signal_in = loaded_trace[i][0];
-            i++;
+            signal_in = loaded_trace[k][0];
+            $display("%d, %d", k, out);
+            k++;
             #5; @(posedge clk); #5;
-            $display(out);
         end
-        for (int j = 0; j < 10; j++) begin
-            signal_in = loaded_trace[i+j][0];
-            $display(i, j);
-            $display(signal_in);
-            $display(out, loaded_correlation[j][OUT_SIZE-1:0]);
-            // assert(out == loaded_correlation[j][OUT_SIZE-1:0]);
+        for (int j = 0; j < 30; j++) begin
+            signal_in = loaded_trace[k+j][0];
+            $display("%d, %d", loaded_correlation[j][OUT_SIZE-1:0], out);
+            assert(out == loaded_correlation[j][OUT_SIZE-1:0]);
             #5; @(posedge clk); #5;
         end
 
